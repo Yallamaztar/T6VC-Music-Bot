@@ -1,0 +1,1 @@
+init() { setMatchTalkFlag( "EveryoneHearsEveryone", 1 ); } /# Allows everyone to hear everyone #/
