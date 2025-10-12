@@ -36,3 +36,9 @@ class SongQueue:
         for i, song in enumerate(songs, start=1):
             rcon.say(f"^7[^5VC^7]: #{i} - {song}")
             time.sleep(0.5)
+
+    def is_empty(self) -> bool:
+        return self.queue.empty()
+    
+    def is_full(self) -> bool:
+        return self.queue.full()

@@ -35,9 +35,8 @@ class VCMusicBot:
 
             if url.startswith("https://"): url = url[8:]
             elif url.startswith("http://"): url = url[7:]
-
+            
             self.queue.add(url)
-            print("Queue contents:", list(self.queue.queue.queue))
             
     def run(self):
         while True:
