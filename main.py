@@ -1,0 +1,52 @@
+import time
+
+from collections import deque
+from threading import Lock
+from concurrent.futures import ThreadPoolExecutor
+
+from core.song_queue import SongQueue
+from core.wrapper import server, rcon
+
+class VCMusicBot:
+    def __init__(self) -> None:
+        self.queue      = SongQueue()
+        self.last_seen  = deque(maxlen=50)
+        self.is_playing = False
+
+        self.lock     = Lock()
+        self.executor = ThreadPoolExecutor(max_workers=20)
+
+        self.run()
+
+    def is_valid_audit_log(self, audit_log: dict[str, str]) -> bool:
+        if (audit_log["origin"], audit_log["data"], audit_log["time"]) in self.last_seen: return False
+        if (audit_log["origin"]) == server.logged_in_as(): return False
+        return True
+    
+    def handle_command(self, data: str) -> None:
+        parts = data.strip().split()
+        if not parts: return
+
+        command = parts[0].lower()
+        if command.startswith("!play") or command.startswith("!ply"):
+            url = " ".join(parts[1:]) if len(parts) > 1 else None
+            if not url:
+                rcon.say("^7[^5VC^7]: Please provide a YouTube link"); return
+
+            if url.startswith("https://"): url = url[8:]
+            elif url.startswith("http://"): url = url[7:]
+
+            self.queue.add(url)
+            print("Queue contents:", list(self.queue.queue.queue))
+            
+    def run(self):
+        while True:
+            audit_log = server.get_recent_audit_log()
+            if audit_log is None: time.sleep(0.1); continue
+            if not self.is_valid_audit_log(audit_log): time.sleep(.01); continue
+            
+            self.last_seen.append((audit_log["origin"], audit_log['data'], audit_log['time']))
+            self.handle_command(audit_log['data'])
+            time.sleep(.01)
+
+vc = VCMusicBot()
