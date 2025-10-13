@@ -13,8 +13,8 @@ class VCMusicBot:
     def __init__(self) -> None:
         self.queue      = TrackQueue()
         self.last_seen  = deque(maxlen=50)
-        self.vm         = VirtualMic()
-
+        self.vm         = VirtualMic() # you can add your virtual mic and vc key here
+                                       # self.vm = VirtualMic(device_name="My Virtual Mic", vc_key="u")
         self.lock     = Lock()
         self.executor = ThreadPoolExecutor(max_workers=20)
 
@@ -24,7 +24,8 @@ class VCMusicBot:
     def is_valid_audit_log(self, audit_log: dict[str, str]) -> bool:
         if (audit_log["origin"], audit_log["data"], audit_log["time"]) in self.last_seen: return False
         if (audit_log["origin"]) == server.logged_in_as(): return False
-        return True
+        if audit_log["data"].startswith(("!play", "!ply", "!pause", "!pa", "!next", "!nxt")): return True
+        return False
     
     def handle_command(self, data: str) -> None:
         parts = data.strip().split()
@@ -44,8 +45,8 @@ class VCMusicBot:
             if self.queue.is_empty(): self.executor.submit(self.start, url)
             else: self.queue.add(url)
 
-        elif command.startswith("!pause") or command.startswith("!pa"): pass
-        elif command.startswith("!next") or command.startswith("!nxt"): pass
+        elif command.startswith("!pause") or command.startswith("!pa"): """Not implemented yet"""
+        elif command.startswith("!next") or command.startswith("!nxt"): """Not implemented yet"""
 
     def start(self, url: str) -> None:
         if url.startswith("https://"): url = url[8:]
@@ -54,8 +55,9 @@ class VCMusicBot:
             
         title = download_audio(url)
         path  = os.path.join("tmp", title + ".wav")
+
         if title: self.vm.play(path)
-        else: rcon.say("^7[^5VC^7]: Failed to download {url}")
+        else: rcon.say(f"^7[^5VC^7]: Failed to download {url}")
 
     def run(self):
         while True:

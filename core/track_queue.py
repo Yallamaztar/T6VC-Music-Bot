@@ -1,6 +1,8 @@
 import os
 from queue import Queue
+
 from core.downloader import download_audio
+from core.wrapper import rcon
 
 class TrackQueue:
     def __init__(self) -> None:
@@ -17,6 +19,7 @@ class TrackQueue:
         if title: 
             self.queue.put(os.path.join("tmp", title + ".wav"))
             print(f"[TrackQueue] Added {title} - {url}")
+            rcon.say(f"^7[^5VC^7]: Added ^5{title} ^7to queue")
         
     def clear(self) -> None:
         while not self.queue.empty():

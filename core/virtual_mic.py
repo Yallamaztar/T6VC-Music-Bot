@@ -6,7 +6,7 @@ from core.track_queue import Queue
 from core.wrapper import rcon
 
 class VirtualMic:
-    def __init__(self, device_name: str = "Headset Earphone (HyperX Virtual Surround Sound)", vc_key: str = "z") -> None:
+    def __init__(self, device_name: str = "CABLE Input (VB-Audio Virtual Cable)", vc_key: str = "z") -> None:
         self.vc_key = vc_key
         self.queue  = Queue()
 
