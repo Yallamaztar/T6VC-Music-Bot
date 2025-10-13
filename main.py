@@ -18,6 +18,7 @@ class VCMusicBot:
         self.lock     = Lock()
         self.executor = ThreadPoolExecutor(max_workers=20)
 
+        print("[VCMusicBot] Starting To Listen For Commands")
         self.run()
 
     def is_valid_audit_log(self, audit_log: dict[str, str]) -> bool:
@@ -38,9 +39,11 @@ class VCMusicBot:
             if self.queue.is_full():
                 rcon.say("^7[^5VC^7]: Queue is full, please try again after this song"); return
             
-            if self.queue.is_empty():
-                self.executor.submit(self.start_download, url)
+            if self.queue.is_empty(): self.executor.submit(self.start_download, url)
             else: self.queue.add(url)
+
+        elif command.startswith("!pause") or command.startswith("!pa"): pass
+        elif command.startswith("!next") or command.startswith("!nxt"): pass
 
     def start_download(self, url: str) -> None:
         if url.startswith("https://"): url = url[8:]
@@ -49,7 +52,7 @@ class VCMusicBot:
         title = download_audio(url)
         path  = os.path.join("tmp", title + ".wav")
         if title: self.vm.play(path)
-            
+
     def run(self):
         while True:
             audit_log = server.get_recent_audit_log()
@@ -57,7 +60,7 @@ class VCMusicBot:
             if not self.is_valid_audit_log(audit_log): time.sleep(.01); continue
             
             self.last_seen.append((audit_log["origin"], audit_log['data'], audit_log['time']))
-            self.handle_command(audit_log['data'])
+            self.executor.submit(self.handle_command, audit_log['data']) 
             time.sleep(.01)
 
 VCMusicBot().run() # !play <youtube link>

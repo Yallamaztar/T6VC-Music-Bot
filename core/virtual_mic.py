@@ -9,27 +9,37 @@ class VirtualMic:
     def __init__(self, device_name: str = "Headset Earphone (HyperX Virtual Surround Sound)", vc_key: str = "z") -> None:
         self.vc_key = vc_key
         self.queue  = Queue()
+
         pygame.init()   
         if pygame.mixer.get_init(): pygame.mixer.quit()
-        try: pygame.mixer.init(devicename=device_name)
-        except Exception: print("Couldnt find sound device")
+        try: 
+            pygame.mixer.init(devicename=device_name)
+            print(f"[VirtualMic] Found {device_name}")
+        except Exception: print("[VirtualMic] Couldnt find sound device")
+
+        print("[VirtualMic] Initialized")
         
-    def play(self, track: str) -> None:
-        pygame.mixer.music.load(track)
+    def play(self, path: str) -> None:
+        pygame.mixer.music.load(path)
         pygame.mixer.music.play()
+
+        print(f"[VirtualMic] Playing song {path}")
+        rcon.say(f"^7[^5VC^7]: Playing song {path}")
 
         try:
             while self.is_playing():
                 keyboard.press(self.vc_key)
                 time.sleep(0.1)
-        finally:
-            keyboard.release(self.vc_key)
+        finally: keyboard.release(self.vc_key)
 
         if not self.queue.empty():
-            url = self.queue.next()
-            self.play(url)
+            path = self.queue.next()
+            self.play(path)
+            print(f"[VirtualMic] Playing next song {path}")
 
-        else: rcon.say("All songs finished playing")
+        else: 
+            print(f"[VirtualMic] All songs finished playing")
+            rcon.say("All songs finished playing")
 
     def pause(self) -> None:
         pygame.mixer.music.pause()
@@ -51,3 +61,4 @@ class VirtualMic:
         pygame.mixer.music.stop()
         pygame.mixer.quit()
         pygame.quit()
+        print("[VirtualMic] Clean up successful")

@@ -1,16 +1,22 @@
-import time
+import os
 from queue import Queue
-
-from core.wrapper import rcon
-from core.downloader import get_info
+from core.downloader import download_audio
 
 class TrackQueue:
     def __init__(self) -> None:
         self.queue = Queue(maxsize=5)
+        print("[TrackQueue] Initialized")
 
     def add(self, url: str) -> None:
         if self.queue.full(): return
-        self.queue.put(url)
+
+        if url.startswith("https://"): url = url[8:]
+        elif url.startswith("http://"): url = url[7:]
+            
+        title = download_audio(url)
+        if title: 
+            self.queue.put(os.path.join("tmp", title + ".wav"))
+            print(f"[TrackQueue] Added {title} - {url}")
         
     def clear(self) -> None:
         while not self.queue.empty():
