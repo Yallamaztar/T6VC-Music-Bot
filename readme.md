@@ -1,6 +1,12 @@
 # T6VC Music Bot
 
+<<<<<<< HEAD
 A voice chat music bot for Plutonium T6 (Black Ops II) that allows players to play YouTube music through in-game voice chat using a virtual microphone setup.
+=======
+![https://github.com/Yallamaztar/T6VC-Music-Bot](./image.png)
+
+A voice chat music bot for Call of Duty: Black Ops 4 that allows players to play YouTube music through in-game voice chat using a virtual microphone setup.
+>>>>>>> b55eb50 (added image)
 
 ## ⚠️ Requirements
 
