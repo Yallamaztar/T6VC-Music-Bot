@@ -4,9 +4,11 @@ import yt_dlp
 def download_audio(url: str) -> str | None:
     try:
         title, filesize = get_info(url)
+        sanitized = sanitize_filename(title)
+        
         opts = {
             "format": "bestaudio/best",
-            "outtmpl": rf"tmp\{sanitize_filename(title)}.%(ext)s",
+            "outtmpl": rf"tmp\{sanitized}.%(ext)s",
             "noplaylist": True,
             "postprocessors": [{
                 "key": "FFmpegExtractAudio",
@@ -18,15 +20,15 @@ def download_audio(url: str) -> str | None:
         }
 
         if filesize and filesize > opts["max_filesize"]:
-            print(f"^7[^5VC^7]: Too large file for {sanitize_filename(title)}")
+            print(f"^7[^5VC^7]: Too large file for {sanitized}")
             return None
 
-        print(f"^7[^5VC^7]: Started new download for {sanitize_filename(title)}")
+        print(f"^7[^5VC^7]: Started new download for {sanitized}")
 
         with yt_dlp.YoutubeDL(opts) as yt:
             yt.download([url])
 
-        return sanitize_filename(title)
+        return sanitized
 
     except Exception as e:
         print(f"^7[^5VC^7]: Download failed for {url}: {e}")
