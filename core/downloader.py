@@ -11,7 +11,7 @@ def download_audio(url: str, ) -> None:
             "preferredcodec": "wav",
             "preferredquality": "192",
         }],
-        "max_filesize": 25 * 1024 * 1024, # 25MB
+        "max_filesize": 250 * 1024 * 1024, # 25MB
         "concurrent_fragment_downloads": 5
     }
 
@@ -25,7 +25,7 @@ def download_audio(url: str, ) -> None:
             rcon.say(f"^7[^5VC^7]: Started new download for {title}")
             yt.download(url)
 
-        except Exception as e: rcon.say(f"^7[^5VC^7]: Download failed for {title}")
+        except Exception: rcon.say(f"^7[^5VC^7]: Download failed for {title}")
 
 def get_info(url: str) -> str:
     rcon.say(f"^7[^5VC^7]: validating {url}")

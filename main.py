@@ -4,12 +4,13 @@ from collections import deque
 from threading import Lock
 from concurrent.futures import ThreadPoolExecutor
 
-from core.song_queue import SongQueue
+from core.song_queue import TrackQueue
+from core.downloader import download_audio
 from core.wrapper import server, rcon
 
 class VCMusicBot:
     def __init__(self) -> None:
-        self.queue      = SongQueue()
+        self.queue      = TrackQueue()
         self.last_seen  = deque(maxlen=50)
         self.is_playing = False
 
@@ -47,5 +48,3 @@ class VCMusicBot:
             self.last_seen.append((audit_log["origin"], audit_log['data'], audit_log['time']))
             self.handle_command(audit_log['data'])
             time.sleep(.01)
-
-vc = VCMusicBot()
