@@ -34,24 +34,28 @@ class VCMusicBot:
         if command.startswith("!play") or command.startswith("!ply"):
             url = " ".join(parts[1:]) if len(parts) > 1 else None
             if not url:
+                print("[VCMusicBot] No URL provided")
                 rcon.say("^7[^5VC^7]: Please provide a YouTube link"); return
             
             if self.queue.is_full():
+                print("[VCMusicBot] Queue is full")
                 rcon.say("^7[^5VC^7]: Queue is full, please try again after this song"); return
             
-            if self.queue.is_empty(): self.executor.submit(self.start_download, url)
+            if self.queue.is_empty(): self.executor.submit(self.start, url)
             else: self.queue.add(url)
 
         elif command.startswith("!pause") or command.startswith("!pa"): pass
         elif command.startswith("!next") or command.startswith("!nxt"): pass
 
-    def start_download(self, url: str) -> None:
+    def start(self, url: str) -> None:
         if url.startswith("https://"): url = url[8:]
         elif url.startswith("http://"): url = url[7:]
+        rcon.say(f"^7[^5VC^7]: Started processing {url}")
             
         title = download_audio(url)
         path  = os.path.join("tmp", title + ".wav")
         if title: self.vm.play(path)
+        else: rcon.say("^7[^5VC^7]: Failed to download {url}")
 
     def run(self):
         while True:
@@ -63,4 +67,5 @@ class VCMusicBot:
             self.executor.submit(self.handle_command, audit_log['data']) 
             time.sleep(.01)
 
-VCMusicBot().run() # !play <youtube link>
+if __name__ == '__main__':
+    VCMusicBot().run()

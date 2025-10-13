@@ -24,7 +24,7 @@ class VirtualMic:
         pygame.mixer.music.play()
 
         print(f"[VirtualMic] Playing song {path}")
-        rcon.say(f"^7[^5VC^7]: Playing song {path}")
+        rcon.say(f"^7[^5VC^7]: Playing song {path[4:][:-4]}")
 
         try:
             while self.is_playing():
@@ -34,17 +34,18 @@ class VirtualMic:
 
         if not self.queue.empty():
             path = self.queue.next()
+            print(f"[VirtualMic] Playing next song {path[4:][:-4]}")
             self.play(path)
-            print(f"[VirtualMic] Playing next song {path}")
-
         else: 
             print(f"[VirtualMic] All songs finished playing")
             rcon.say("All songs finished playing")
 
     def pause(self) -> None:
+        rcon.say(f"^7[^5VC^7]: Pausing song")
         pygame.mixer.music.pause()
 
     def unpause(self) -> None:
+        rcon.say(f"^7[^5VC^7]: Continuing song")
         pygame.mixer.music.unpause()
 
     def stop(self) -> None:
