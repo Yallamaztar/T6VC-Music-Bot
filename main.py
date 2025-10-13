@@ -6,7 +6,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 from core.song_queue import TrackQueue
 from core.virtual_mic import VirtualMic
-from core.downloader import download_audio, sanitize_filename
+from core.downloader import download_audio
 from core.wrapper import server, rcon
 
 class VCMusicBot:
@@ -38,7 +38,7 @@ class VCMusicBot:
             if url.startswith("https://"): url = url[8:]
             elif url.startswith("http://"): url = url[7:]
             
-            title = sanitize_filename(download_audio(url))
+            title = download_audio(url)
             path  = os.path.join("tmp", title + ".wav")
             if title: self.vm.play(path)
             
