@@ -1,7 +1,7 @@
 import yt_dlp
 from .wrapper import rcon
 
-def download_audio(url: str, ) -> None:
+def download_audio(url: str, ) -> str | None:
     opts = {
         "format": "bestaudio/best",
         "outtmpl": r"tmp\%(title)s.%(ext)s",
@@ -11,7 +11,7 @@ def download_audio(url: str, ) -> None:
             "preferredcodec": "wav",
             "preferredquality": "192",
         }],
-        "max_filesize": 250 * 1024 * 1024, # 25MB
+        "max_filesize": 2500 * 1024 * 1024, # 250MB
         "concurrent_fragment_downloads": 5
     }
 
@@ -24,8 +24,9 @@ def download_audio(url: str, ) -> None:
         
             rcon.say(f"^7[^5VC^7]: Started new download for {title}")
             yt.download(url)
+            return title
 
-        except Exception: rcon.say(f"^7[^5VC^7]: Download failed for {title}")
+        except Exception: rcon.say(f"^7[^5VC^7]: Download failed for {title}"); return
 
 def get_info(url: str) -> str:
     rcon.say(f"^7[^5VC^7]: validating {url}")

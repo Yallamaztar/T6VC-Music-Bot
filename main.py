@@ -5,6 +5,7 @@ from threading import Lock
 from concurrent.futures import ThreadPoolExecutor
 
 from core.song_queue import TrackQueue
+from core.virtual_mic import VirtualMic
 from core.downloader import download_audio
 from core.wrapper import server, rcon
 
@@ -12,6 +13,7 @@ class VCMusicBot:
     def __init__(self) -> None:
         self.queue      = TrackQueue()
         self.last_seen  = deque(maxlen=50)
+        self.is_playing = False
 
         self.lock     = Lock()
         self.executor = ThreadPoolExecutor(max_workers=20)
@@ -36,7 +38,8 @@ class VCMusicBot:
             if url.startswith("https://"): url = url[8:]
             elif url.startswith("http://"): url = url[7:]
             
-            self.queue.add(url)
+            title = download_audio(url)
+            if title: VirtualMic().play(f"tmp/{title}.wav")
             
     def run(self):
         while True:
@@ -47,3 +50,5 @@ class VCMusicBot:
             self.last_seen.append((audit_log["origin"], audit_log['data'], audit_log['time']))
             self.handle_command(audit_log['data'])
             time.sleep(.01)
+
+VCMusicBot().run() # !play <youtube link>   <- ingame cmd
