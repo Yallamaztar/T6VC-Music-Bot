@@ -10,9 +10,7 @@ class TrackQueue:
 
     def add(self, url: str) -> None:
         if self.queue.full(): return
-        
         self.queue.put(url)
-        title, _ = get_info(url)
         
     def clear(self) -> None:
         while not self.queue.empty():
@@ -22,14 +20,6 @@ class TrackQueue:
     def next(self) -> None:
         if self.queue.empty(): return None
         return self.queue.get_nowait()
-
-    def status(self) -> None:
-        if self.queue.empty(): return
-        
-        songs = list(self.queue.queue)
-        for i, song in enumerate(songs, start=1):
-            print(f"^7[^5VC^7]: #{i} - {song}")
-            time.sleep(0.5)
 
     def is_empty(self) -> bool:
         return self.queue.empty()

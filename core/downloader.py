@@ -40,7 +40,6 @@ def get_info(url: str) -> str:
         info = yt.extract_info(url, download=False)
         return info.get("title"), info.get("filesize") or info.get("filesize_approx")
 
-
 def sanitize_filename(name):
     name = name.replace("｜", "|")
     name = re.sub(r'[\\/*?:"<>|]', "_", name)

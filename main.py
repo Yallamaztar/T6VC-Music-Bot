@@ -4,7 +4,7 @@ from collections import deque
 from threading import Lock
 from concurrent.futures import ThreadPoolExecutor
 
-from core.song_queue import TrackQueue
+from core.track_queue import TrackQueue
 from core.virtual_mic import VirtualMic
 from core.downloader import download_audio
 from core.wrapper import server, rcon
@@ -34,13 +34,21 @@ class VCMusicBot:
             url = " ".join(parts[1:]) if len(parts) > 1 else None
             if not url:
                 rcon.say("^7[^5VC^7]: Please provide a YouTube link"); return
-
-            if url.startswith("https://"): url = url[8:]
-            elif url.startswith("http://"): url = url[7:]
             
-            title = download_audio(url)
-            path  = os.path.join("tmp", title + ".wav")
-            if title: self.vm.play(path)
+            if self.queue.is_full():
+                rcon.say("^7[^5VC^7]: Queue is full, please try again after this song"); return
+            
+            if self.queue.is_empty():
+                self.executor.submit(self.start_download, url)
+            else: self.queue.add(url)
+
+    def start_download(self, url: str) -> None:
+        if url.startswith("https://"): url = url[8:]
+        elif url.startswith("http://"): url = url[7:]
+            
+        title = download_audio(url)
+        path  = os.path.join("tmp", title + ".wav")
+        if title: self.vm.play(path)
             
     def run(self):
         while True:
