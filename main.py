@@ -12,7 +12,6 @@ class VCMusicBot:
     def __init__(self) -> None:
         self.queue      = TrackQueue()
         self.last_seen  = deque(maxlen=50)
-        self.is_playing = False
 
         self.lock     = Lock()
         self.executor = ThreadPoolExecutor(max_workers=20)
