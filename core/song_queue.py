@@ -28,7 +28,7 @@ class TrackQueue:
         
         songs = list(self.queue.queue)
         for i, song in enumerate(songs, start=1):
-            rcon.say(f"^7[^5VC^7]: #{i} - {song}")
+            print(f"^7[^5VC^7]: #{i} - {song}")
             time.sleep(0.5)
 
     def is_empty(self) -> bool:
