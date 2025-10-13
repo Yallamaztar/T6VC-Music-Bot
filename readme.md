@@ -1,6 +1,6 @@
 # T6VC Music Bot
 
-A voice chat music bot for Call of Duty: Black Ops 4 that allows players to play YouTube music through in-game voice chat using a virtual microphone setup.
+A voice chat music bot for Plutonium T6 (Black Ops II) that allows players to play YouTube music through in-game voice chat using a virtual microphone setup.
 
 ## ⚠️ Requirements
 
@@ -43,6 +43,7 @@ You need to install [VB-Cable Virtual Audio Device](https://vb-audio.com/Cable/)
    IW4M_URL=your_iw4m_server_url
    IW4M_ID=your_server_id
    IW4M_HEADER=your_iw4m_cookie
+   
    RCON_IP=your_rcon_ip
    RCON_PORT=your_rcon_port
    RCON_PASSWORD=your_rcon_password
@@ -67,7 +68,6 @@ The bot automatically detects your audio device. If you need to change the virtu
 
 ## Dependencies
 
-- Python 3.7+
 - pygame (audio playback)
 - yt-dlp (YouTube audio downloading)
 - iw4m (T6VC server integration)
