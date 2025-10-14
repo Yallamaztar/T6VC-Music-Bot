@@ -30,6 +30,7 @@ You need to install [VB-Cable Virtual Audio Device](https://vb-audio.com/Cable/)
 
 - `!play <youtube_url>` or `!ply <youtube_url>` - Add a song to the queue
 - `!pause` or `!pa` - Pause the current song
+- `!unpause` or `!up` - Unpause the current song
 - `!next` or `!nxt` - Skip to the next song
 
 ## Installation
