@@ -2,13 +2,14 @@ import time
 import pygame
 import keyboard
 
-from core.track_queue import Queue
+from core.track_queue import TrackQueue
 from core.wrapper import rcon
 
 class VirtualMic:
     def __init__(self, device_name: str = "CABLE Input (VB-Audio Virtual Cable)", vc_key: str = "z") -> None:
         self.vc_key = vc_key
-        self.queue  = Queue()
+        self.queue  = TrackQueue()
+        self.is_paused = False
 
         pygame.init()   
         if pygame.mixer.get_init(): pygame.mixer.quit()
@@ -27,12 +28,14 @@ class VirtualMic:
         rcon.say(f"^7[^5VC^7]: Playing song {path[4:][:-4]}")
 
         try:
-            while self.is_playing():
+            while True:
+                if self.is_paused: time.sleep(0.1); continue
+                if not self.is_playing(): break
                 keyboard.press(self.vc_key)
                 time.sleep(0.1)
         finally: keyboard.release(self.vc_key)
 
-        if not self.queue.empty():
+        if not self.queue.is_empty():
             path = self.queue.next()
             print(f"[VirtualMic] Playing next song {path[4:][:-4]}")
             self.play(path)
@@ -41,19 +44,22 @@ class VirtualMic:
             rcon.say("All songs finished playing")
 
     def pause(self) -> None:
-        rcon.say(f"^7[^5VC^7]: Pausing song")
+        self.is_paused = True
+        rcon.say("^7[^5VC^7]: Pausing song")
         pygame.mixer.music.pause()
 
     def unpause(self) -> None:
-        rcon.say(f"^7[^5VC^7]: Continuing song")
+        self.is_paused = False
+        rcon.say("^7[^5VC^7]: Continuing song")
         pygame.mixer.music.unpause()
 
     def stop(self) -> None:
         pygame.mixer.music.stop()
 
-    def skip(self, next_path: str) -> None:
-        pygame.mixer.music.stop()
-        pygame.mixer.music.load(next_path)
+    def skip(self) -> None:
+        if not self.queue.is_empty():
+            pygame.mixer.music.stop()
+            pygame.mixer.music.load(self.queue.next())
 
     def is_playing(self) -> bool:
         return pygame.mixer.music.get_busy()

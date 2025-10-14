@@ -7,10 +7,18 @@ def download_audio(url: str) -> str | None:
     
     print(f"[Downloader]: Trying to download: {url}")
     try:
-        title, filesize = get_info(url)
+        with yt_dlp.YoutubeDL({"quiet": True, "noplaylist": True}) as ydl:
+            info = ydl.extract_info(url, download=False)
+
+        title = info.get("title") or "unknown_title"
+        filesize = info.get("filesize") or info.get("filesize_approx")
+        sanitized = sanitize_filename(title)
+
         if filesize and filesize > MAX_SIZE:
-            print(f"[Downloader]: Too large file - {sanitized}")
-            rcon.say(f"^7[^5VC^7]: ^1Too large ^7file - {sanitized}"); return
+            msg = f"Too large file - {sanitized}"
+            print(f"[Downloader]: {msg}")
+            rcon.say(f"^7[^5VC^7]: ^1Too large ^7file - {sanitized}")
+            return
         
         sanitized = sanitize_filename(title)
         opts = {
@@ -37,11 +45,6 @@ def download_audio(url: str) -> str | None:
     except Exception:
         print(f"[Downloader]: Download failed for {sanitized}")
         rcon.say(f"^7[^5VC^7]: Download ^1failed ^7for {sanitized}"); return
-
-def get_info(url: str) -> str:
-    with yt_dlp.YoutubeDL() as yt:
-        info = yt.extract_info(url, download=False)
-        return info.get("title"), info.get("filesize") or info.get("filesize_approx")
 
 def sanitize_filename(name):
     name = name.replace("｜", "|")

@@ -24,7 +24,7 @@ class VCMusicBot:
     def is_valid_audit_log(self, audit_log: dict[str, str]) -> bool:
         if (audit_log["origin"], audit_log["data"], audit_log["time"]) in self.last_seen: return False
         if (audit_log["origin"]) == server.logged_in_as(): return False
-        if audit_log["data"].startswith(("!play", "!ply", "!pause", "!pa", "!next", "!nxt")): return True
+        if audit_log["data"].startswith(("!play", "!ply", "!pause", "!pa", "!unpause", "!up" "!next", "!nxt")): return True
         return False
     
     def handle_command(self, data: str) -> None:
@@ -42,11 +42,12 @@ class VCMusicBot:
                 print("[VCMusicBot] Queue is full")
                 rcon.say("^7[^5VC^7]: Queue is full, please try again after this song"); return
             
-            if self.queue.is_empty(): self.executor.submit(self.start, url)
+            if self.queue.is_empty() and not self.vm.is_playing(): self.executor.submit(self.start, url)
             else: self.queue.add(url)
 
-        elif command.startswith("!pause") or command.startswith("!pa"): """Not implemented yet"""
-        elif command.startswith("!next") or command.startswith("!nxt"): """Not implemented yet"""
+        elif command.startswith("!pause") or command.startswith("!pa"): self.vm.pause()
+        elif command.startswith("!unpause") or command.startswith("!up"): self.vm.unpause()
+        elif command.startswith("!next") or command.startswith("!nxt"): self.vm.skip()
 
     def start(self, url: str) -> None:
         if url.startswith("https://"): url = url[8:]
