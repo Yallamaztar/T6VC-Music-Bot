@@ -44,14 +44,16 @@ class VirtualMic:
             rcon.say("All songs finished playing")
 
     def pause(self) -> None:
-        self.is_paused = True
-        rcon.say("^7[^5VC^7]: Pausing song")
-        pygame.mixer.music.pause()
+        if self.is_playing() and not self.is_paused:
+            self.is_paused = True
+            rcon.say("^7[^5VC^7]: Pausing song")
+            pygame.mixer.music.pause()
 
     def unpause(self) -> None:
-        self.is_paused = False
-        rcon.say("^7[^5VC^7]: Continuing song")
-        pygame.mixer.music.unpause()
+        if not self.is_playing() and self.is_paused:
+            self.is_paused = False
+            rcon.say("^7[^5VC^7]: Continuing song")
+            pygame.mixer.music.unpause()
 
     def stop(self) -> None:
         pygame.mixer.music.stop()
