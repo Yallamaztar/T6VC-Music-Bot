@@ -24,7 +24,7 @@ class VCMusicBot:
     def is_valid_audit_log(self, audit_log: dict[str, str]) -> bool:
         if (audit_log["origin"], audit_log["data"], audit_log["time"]) in self.last_seen: return False
         if (audit_log["origin"]) == server.logged_in_as(): return False
-        if audit_log["data"].startswith(("!play", "!ply", "!pause", "!pa", "!unpause", "!up" "!next", "!nxt")): return True
+        if audit_log["data"].startswith(("!play", "!ply", "!pause", "!pa", "!unpause", "!up", "!next", "!nxt")): return True
         return False
     
     def handle_command(self, data: str) -> None:
@@ -48,6 +48,7 @@ class VCMusicBot:
         elif command.startswith("!pause") or command.startswith("!pa"): self.vm.pause()
         elif command.startswith("!unpause") or command.startswith("!up"): self.vm.unpause()
         elif command.startswith("!next") or command.startswith("!nxt"): self.vm.skip()
+        else: print("idk how we got here lmao")
 
     def start(self, url: str) -> None:
         if url.startswith("https://"): url = url[8:]
