@@ -3,7 +3,7 @@ import yt_dlp
 from core.wrapper import rcon
 
 def download_audio(url: str) -> str | None:
-    MAX_SIZE: int = 500 * 1024 * 1024 # 50 MB
+    MAX_SIZE: int = 100 * 1024 * 1024 # 100 MB
     
     print(f"[Downloader]: Trying to download: {url}")
     try:

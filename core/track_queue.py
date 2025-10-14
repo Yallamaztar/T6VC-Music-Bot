@@ -27,7 +27,7 @@ class TrackQueue:
             self.queue.task_done()
 
     def next(self) -> None:
-        if self.queue.empty(): return None
+        if self.queue.empty(): return
         return self.queue.get_nowait()
 
     def is_empty(self) -> bool:

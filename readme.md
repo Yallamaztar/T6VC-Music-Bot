@@ -22,7 +22,7 @@ You need to install [VB-Cable Virtual Audio Device](https://vb-audio.com/Cable/)
 - 📋 Queue system for multiple songs
 - ⏸️ Pause/Resume functionality
 - ⏭️ Skip to next song
-- 📏 File size limits (500MB max)
+- 📏 File size limits (100MB max)
 - 🎮 T6VC server integration via RCON
 - 🔧 Automatic audio device detection
 
