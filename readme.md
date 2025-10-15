@@ -36,7 +36,7 @@ The bot needs to be running **inside the Plutonium T6 game client** as a connect
 - 📋 Queue system for multiple songs
 - ⏸️ Pause/Resume functionality
 - ⏭️ Skip to next song
-- 📏 File size limits (100MB max)
+- 📏 File size limits (500MB max)
 - 🎮 T6VC server integration via RCON
 - 🔧 Automatic audio device detection
 
