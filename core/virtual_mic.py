@@ -2,14 +2,13 @@ import time
 import pygame
 import keyboard
 
-from core.track_queue import TrackQueue
 from core.wrapper import rcon
 
 class VirtualMic:
-    def __init__(self, device_name: str = "CABLE Input (VB-Audio Virtual Cable)", vc_key: str = "z") -> None:
-        self.vc_key = vc_key
-        self.queue  = TrackQueue()
+    def __init__(self, queue, device_name: str = "CABLE Input (VB-Audio Virtual Cable)", vc_key: str = "z") -> None:
+        self.vc_key    = vc_key
         self.is_paused = False
+        self.queue     = queue
 
         pygame.init()   
         if pygame.mixer.get_init(): pygame.mixer.quit()
@@ -29,10 +28,13 @@ class VirtualMic:
 
         try:
             while True:
-                if self.is_paused: time.sleep(0.1); continue
                 if not self.is_playing(): break
                 keyboard.press(self.vc_key)
                 time.sleep(0.1)
+                if self.is_paused: 
+                    while self.is_paused and self.is_playing():
+                        keyboard.press(self.vc_key)
+                        time.sleep(0.1)
         finally: keyboard.release(self.vc_key)
 
         if not self.queue.is_empty():

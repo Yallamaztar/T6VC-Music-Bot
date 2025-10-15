@@ -6,15 +6,15 @@ from concurrent.futures import ThreadPoolExecutor
 
 from core.track_queue import TrackQueue
 from core.virtual_mic import VirtualMic
-from core.downloader import download_audio
+from core.downloader import download_audio, search_song
 from core.wrapper import server, rcon
 
 class VCMusicBot:
     def __init__(self) -> None:
         self.queue      = TrackQueue()
         self.last_seen  = deque(maxlen=50)
-        self.vm         = VirtualMic() # you can add your virtual mic and vc key here
-                                       # self.vm = VirtualMic(device_name="My Virtual Mic", vc_key="u")
+        self.vm         = VirtualMic(queue=self.queue) # you can add your virtual mic and vc key here
+                                       # self.vm = VirtualMic(queue=self.queue, device_name="My Virtual Mic", vc_key="u")
         self.lock     = Lock()
         self.executor = ThreadPoolExecutor(max_workers=20)
 
@@ -33,17 +33,24 @@ class VCMusicBot:
 
         command = parts[0].lower()
         if command.startswith("!play") or command.startswith("!ply"):
-            url = " ".join(parts[1:]) if len(parts) > 1 else None
-            if not url:
-                print("[VCMusicBot] No URL provided")
-                rcon.say("^7[^5VC^7]: Please provide a YouTube link"); return
+            query = " ".join(parts[1:]) if len(parts) > 1 else None
+            if not query:
+                print("[VCMusicBot] No search query or URL provided")
+                rcon.say("^7[^5VC^7]: Please provide a YouTube link or search query"); return
             
             if self.queue.is_full():
                 print("[VCMusicBot] Queue is full")
                 rcon.say("^7[^5VC^7]: Queue is full, please try again after this song"); return
             
-            if self.queue.is_empty() and not self.vm.is_playing(): self.executor.submit(self.start, url)
-            else: self.queue.add(url)
+            if query.startswith(("http://", "https://", "www.youtube.com", "youtu.be")): url = query
+            else:
+                url = search_song(query)
+                if not url: return
+            
+            if self.queue.is_empty() and not self.vm.is_playing(): 
+                self.executor.submit(self.start, url)
+            else: 
+                self.queue.add(url)
 
         elif command.startswith("!pause") or command.startswith("!pa"): self.vm.pause()
         elif command.startswith("!unpause") or command.startswith("!up"): self.vm.unpause()
