@@ -87,7 +87,7 @@ The bot automatically detects your audio device. If you need to change the virtu
 
 - pygame (audio playback)
 - yt-dlp (YouTube audio downloading)
-- iw4m (T6VC server integration)
+- iw4m (IW4M-Admin integration)
 - t6rcon (RCON communication)
 - keyboard (voice chat key simulation)
 
