@@ -16,6 +16,20 @@ You need to install [VB-Cable Virtual Audio Device](https://vb-audio.com/Cable/)
 3. Configure your game to use VB-Cable as the microphone input
 4. The bot will automatically detect and use the virtual audio device
 
+## 🎮 **IMPORTANT: Bot Deployment Requirements**
+
+**This bot must run as an actual game client to function properly!**
+
+The bot needs to be running **inside the Plutonium T6 game client** as a connected player to interact with the server's voice chat system. Here's why:
+
+- **Voice Chat Integration**: The bot simulates pressing the voice chat key while playing music, which only works when connected as a game client
+- **Audio Routing**: Music is played through the virtual microphone and transmitted via the game's voice chat to other players
+
+**What this means:**
+- You need a dedicated computer/account that stays connected to your T6 server
+- The bot account must remain in-game as a player
+- This is not a standalone server application - it requires an active game client
+
 ## Features
 
 - 🎵 Play YouTube music through voice chat
