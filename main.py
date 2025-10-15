@@ -14,7 +14,7 @@ class VCMusicBot:
         self.queue      = TrackQueue()
         self.last_seen  = deque(maxlen=50)
         self.vm         = VirtualMic(queue=self.queue) # you can add your virtual mic and vc key here
-                                       # self.vm = VirtualMic(queue=self.queue, device_name="My Virtual Mic", vc_key="u")
+                                                       # self.vm = VirtualMic(queue=self.queue, device_name="My Virtual Mic", vc_key="u")
         self.lock     = Lock()
         self.executor = ThreadPoolExecutor(max_workers=20)
 
